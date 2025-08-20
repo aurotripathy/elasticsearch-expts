@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# use this command to run the script:
+# python main-script.py --model furiosa-ai/Llama-3.3-70B-Instruct  --base-url http://localhost:8080/v1
+
 """
 Automated Faceting and Filtering with Elasticsearch and OpenAI
 
@@ -34,9 +37,6 @@ load_dotenv()
 
 from generate_synthetic_data import generate_profiles
 
-# # Define LLM 
-
-# In[ ]:
 
 print_search_results = False
 
@@ -160,8 +160,6 @@ Now, please convert the following user query into an appropriate Elasticsearch q
 '''
 
 
-# python main-script.py --model furiosa-ai/Llama-3.3-70B-Instruct  --base-url http://localhost:8080/v1
-
 # CLI args for model and base_url
 parser = argparse.ArgumentParser(description="Automated faceted search demo")
 parser.add_argument(
@@ -218,8 +216,6 @@ class OpenAIClient:
         
 LLM = OpenAIClient()
 
-
-
 # Elasticsearch Upload Functions
 
 from collections import defaultdict
@@ -267,7 +263,6 @@ def bulk_upload_pickle_to_elasticsearch(file_path, index_name, es, batch_size=10
 
 # Initialize Elasticsearch client
 
-
 try:
     es_endpoint = os.environ.get("ELASTIC_ENDPOINT")
     es_client = Elasticsearch(
@@ -286,11 +281,7 @@ if es_client.indices.exists(index=index):
     es_client.indices.delete(index=index, ignore_unavailable=True)
 
 
-# In[21]:
-
-
 # Storage loads 402.77MB,  Document count 200,000, take 4.5 minutes to load.
-
 print(f'Uploading data to the DB: {os.environ["ELASTIC_DATA_INDEX"]}')
 # runs=200
 runs = 10
@@ -307,15 +298,8 @@ for i in range(runs):
         print(traceback.print_exc())
 
 
-# # Automated Search
-
-# In[22]:
-
-
-# # Test 1
-
-# In[23]:
-
+# Automated Search
+# Test 1
 
 query="All non-Singaporean men over the age of 25 who are software people living in woodlands" 
 response=LLM.generate_non_streaming_response(query, system_prompt=prompt)
@@ -323,8 +307,6 @@ es_query=json.loads(response)
 print(f'\nResponse generated from the model: {config.model} \nto query: {query}')
 pprint(es_query)
 
-
-# In[12]:
 
 try:
   search_results = es_client.search(index=os.environ.get("ELASTIC_DATA_INDEX"), body=es_query)  
@@ -347,19 +329,13 @@ except Exception as e:
     print(traceback.print_exc())
     print(f'Error: {e}')
 
-# # Test 2
-
-# In[13]:
-
+# Test 2
 
 query="Women who are not alive currently, who are universal blood donors born in singapore" 
 response=LLM.generate_non_streaming_response(query, system_prompt=prompt)
 es_query=json.loads(response)
 print(f'\nResponse generated from the model: {config.model} \nto query: {query}')
 pprint(es_query)
-
-
-# In[14]:
 
 try:
   search_results = es_client.search(index=os.environ.get("ELASTIC_DATA_INDEX"), body=es_query)
@@ -381,10 +357,7 @@ except Exception as e:
     print(traceback.print_exc())
     print(f'Error: {e}')
 
-# # Test 3
-
-# In[13]:
-
+# Test 3
 
 # query="People who speak chinese dialects" 
 query="People who speak chinese dialects fluently" 
@@ -392,9 +365,6 @@ response=LLM.generate_non_streaming_response(query, system_prompt=prompt)
 es_query=json.loads(response)
 print(f'\nResponse generated from the model: {config.model} \nto query: {query}')
 pprint(es_query)
-
-
-# In[14]:
 
 try:
   search_results = es_client.search(index=os.environ.get("ELASTIC_DATA_INDEX"), body=es_query)
@@ -412,9 +382,3 @@ try:
 except Exception as e:
     print(traceback.print_exc())
     print(f'Error: {e}')
-
-# In[ ]:
-
-
-
-
