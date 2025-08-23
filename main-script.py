@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # use this command to run the script:
 # python main-script.py --model furiosa-ai/Llama-3.3-70B-Instruct  --base-url http://localhost:8080/v1
+# or python main-script.py --model gpt-4o-mini --base-url https://api.openai.com/v1
+# or python main-script.py --model meta-llama/Meta-Llama-3-70B-Instruct  --base-url http://localhost:8000/v1
 
 """
 Automated Faceting and Filtering with Elasticsearch and OpenAI
